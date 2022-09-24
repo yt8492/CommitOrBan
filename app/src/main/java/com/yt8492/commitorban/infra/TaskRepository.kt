@@ -33,12 +33,13 @@ class TaskRepository(private val taskDao: TaskDao) {
     }
 
     private fun convertToEntity(task: Task): TaskEntity {
+        val punishment = task.punishment as PunishmentImage
         return TaskEntity(
             id = task.id,
             title = task.title,
             content = task.content,
             due = task.due,
-            punishmentUri = task.punishment.toString(),
+            punishmentUri = punishment.uri.toString(),
             done = task.done,
         )
     }

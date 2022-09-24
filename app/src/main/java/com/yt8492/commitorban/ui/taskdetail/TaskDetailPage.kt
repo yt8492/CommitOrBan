@@ -7,11 +7,17 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toFile
 import androidx.navigation.NavController
+import com.yt8492.commitorban.infra.PunishmentImage
+import com.yt8492.commitorban.infra.Twitter
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
 import com.yt8492.commitorban.util.TimeTickSecEventReceiver
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -20,6 +26,8 @@ fun TaskDetailPage(
     taskId: String,
     navController: NavController,
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val task = getTask(id = taskId) ?: return
     val (now, setNow) = remember {
         mutableStateOf(Instant.now())
@@ -78,7 +86,13 @@ fun TaskDetailPage(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    coroutineScope.launch {
+                        val punishment = task.punishment as PunishmentImage
+                        val inputStream = context.contentResolver.openInputStream(punishment.uri) ?: return@launch
+                        Twitter.tweet("test", inputStream)
+                    }
+                },
                 enabled = seconds >= 0,
             ) {
                 Text(
