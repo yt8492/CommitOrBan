@@ -15,7 +15,7 @@ import com.yt8492.commitorban.domain.model.dummyTask2
 
 @Composable
 fun TaskListPage(
-    navController: NavController
+    navController: NavController,
 ) {
     val taskList = listOf(dummyTask1, dummyTask2)
     Scaffold(
@@ -35,7 +35,9 @@ fun TaskListPage(
             items(taskList, key = { it.id }) { task ->
                 TaskItem(
                     task = task,
-                    onClick = {}
+                    onClick = {
+                        navController.navigate("taskDetail?taskId=${it.id}")
+                    }
                 )
             }
         }

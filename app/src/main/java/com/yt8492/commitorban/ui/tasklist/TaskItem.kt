@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.yt8492.commitorban.domain.model.Task
 import com.yt8492.commitorban.domain.model.dummyTask1
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
-import java.time.Instant
-import java.time.temporal.ChronoUnit
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun TaskItem(
@@ -31,12 +31,7 @@ fun TaskItem(
         ) {
             Text(text = task.title)
             Spacer(modifier = Modifier.weight(1f))
-            val minutes = ChronoUnit.MINUTES.between(Instant.now(), task.due)
-            val dueText = when {
-                minutes > 1 * DAY -> "残り${minutes / DAY}日"
-                minutes > 1 * HOUR -> "残り${minutes / HOUR}時間"
-                else -> "残り${minutes / MINUTE}分"
-            }
+            val dueText = formatter.format(task.due)
             Text(text = dueText)
         }
         Divider()
@@ -53,6 +48,6 @@ fun TaskItemPreview() {
     }
 }
 
-private const val MINUTE = 1
-private const val HOUR = 1 * MINUTE * 60
-private const val DAY = 1 * HOUR * 24
+private val formatter = DateTimeFormatter
+    .ofPattern("yyyy/MM/dd hh:mm")
+    .withZone(ZoneId.systemDefault())

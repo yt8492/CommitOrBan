@@ -15,7 +15,7 @@ val dummyTask1 = Task(
     id = "1",
     title = "腹筋百回",
     content = "腹筋百回します",
-    due = Instant.now().plus(30, ChronoUnit.MINUTES),
+    due = Instant.now().plus(2, ChronoUnit.MINUTES),
     punishment = object : Punishment {},
 )
 

@@ -38,3 +38,9 @@ fun CommitOrBanTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
         content = content
     )
 }
+
+object CommitOrBanTheme {
+    val typography = Typography
+    val colors = DarkColorPalette
+    val shapes = Shapes
+}
