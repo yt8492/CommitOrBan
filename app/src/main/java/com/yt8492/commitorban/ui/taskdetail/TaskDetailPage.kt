@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.yt8492.commitorban.domain.model.dummyTask1
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
 import com.yt8492.commitorban.util.TimeTickSecEventReceiver
 import java.time.Instant
@@ -21,7 +20,7 @@ fun TaskDetailPage(
     taskId: String,
     navController: NavController,
 ) {
-    val task = dummyTask1
+    val task = getTask(id = taskId) ?: return
     val (now, setNow) = remember {
         mutableStateOf(Instant.now())
     }

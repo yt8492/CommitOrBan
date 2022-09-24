@@ -8,10 +8,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import com.yt8492.commitorban.domain.model.Task
+import com.yt8492.commitorban.infra.LocalTaskRepository
 import com.yt8492.commitorban.infra.PunishmentImage
+import kotlinx.coroutines.launch
 import java.io.File
 import java.time.Instant
 import java.time.LocalTime
@@ -21,6 +24,8 @@ import java.util.UUID
 @Composable
 fun taskCreate(): TaskCreateResult {
     val context = LocalContext.current
+    val repository = LocalTaskRepository.current
+    val coroutineScope = rememberCoroutineScope()
     val (done, setDone) = remember {
         mutableStateOf(false)
     }
@@ -33,7 +38,10 @@ fun taskCreate(): TaskCreateResult {
         if  (result.resultCode == Activity.RESULT_OK) {
             val data = result.data
             if (data != null && pendingTask != null) {
-                setDone(true)
+                coroutineScope.launch {
+                    repository.save(pendingTask)
+                    setDone(true)
+                }
             }
         }
     }
@@ -59,7 +67,8 @@ fun taskCreate(): TaskCreateResult {
                             title = title,
                             content = content,
                             due = due,
-                            punishment = PunishmentImage(uri)
+                            punishment = PunishmentImage(uri),
+                            done = false,
                         )
                         setPendingTask(task)
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)

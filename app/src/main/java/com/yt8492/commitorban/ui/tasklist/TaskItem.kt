@@ -49,5 +49,5 @@ fun TaskItemPreview() {
 }
 
 private val formatter = DateTimeFormatter
-    .ofPattern("yyyy/MM/dd hh:mm")
+    .ofPattern("yyyy/MM/dd kk:mm")
     .withZone(ZoneId.systemDefault())

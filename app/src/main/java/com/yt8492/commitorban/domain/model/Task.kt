@@ -9,6 +9,7 @@ data class Task(
     val content: String,
     val due: Instant,
     val punishment: Punishment,
+    val done: Boolean,
 )
 
 val dummyTask1 = Task(
@@ -17,6 +18,7 @@ val dummyTask1 = Task(
     content = "腹筋百回します",
     due = Instant.now().plus(2, ChronoUnit.MINUTES),
     punishment = object : Punishment {},
+    done = false,
 )
 
 val dummyTask2 = Task(
@@ -25,4 +27,5 @@ val dummyTask2 = Task(
     content = "スクワット百回します",
     due = Instant.now().plus(30, ChronoUnit.MINUTES),
     punishment = object : Punishment {},
+    done = false,
 )

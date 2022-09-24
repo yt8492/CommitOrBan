@@ -1,6 +1,5 @@
 package com.yt8492.commitorban.ui.taskcreate
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
@@ -25,7 +23,6 @@ import java.time.format.DateTimeFormatter
 fun TaskCreatePage(
     navController: NavController,
 ) {
-    val context = LocalContext.current
     val (title, setTitle) = remember {
         mutableStateOf("")
     }
@@ -37,7 +34,7 @@ fun TaskCreatePage(
     val (done, taskCreate) = taskCreate()
     LaunchedEffect(done) {
         if (done) {
-            Toast.makeText(context, "done", Toast.LENGTH_SHORT).show()
+            navController.popBackStack()
         }
     }
     Scaffold(

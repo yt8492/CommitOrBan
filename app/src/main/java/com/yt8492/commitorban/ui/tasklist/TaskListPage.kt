@@ -17,7 +17,7 @@ import com.yt8492.commitorban.domain.model.dummyTask2
 fun TaskListPage(
     navController: NavController,
 ) {
-    val taskList = listOf(dummyTask1, dummyTask2)
+    val taskList = getAllTask()
     Scaffold(
         topBar = {
             TopAppBar(
