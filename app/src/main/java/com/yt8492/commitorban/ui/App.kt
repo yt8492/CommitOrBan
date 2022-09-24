@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.yt8492.commitorban.ui.taskcreate.TaskCreatePage
 import com.yt8492.commitorban.ui.taskdetail.TaskDetailPage
 import com.yt8492.commitorban.ui.tasklist.TaskListPage
 
@@ -33,6 +34,13 @@ fun App() {
             val taskId = requireNotNull(backStackEntry.arguments?.getString("taskId"))
             TaskDetailPage(
                 taskId = taskId,
+                navController = navController,
+            )
+        }
+        composable(
+            route = "taskCreate"
+        ) {
+            TaskCreatePage(
                 navController = navController,
             )
         }
