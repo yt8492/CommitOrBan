@@ -1,13 +1,16 @@
 package com.yt8492.commitorban.ui.taskcreate
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
@@ -22,6 +25,7 @@ import java.time.format.DateTimeFormatter
 fun TaskCreatePage(
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val (title, setTitle) = remember {
         mutableStateOf("")
     }
@@ -30,6 +34,12 @@ fun TaskCreatePage(
     }
     val (dueDate, showDueDatePicker) = datePicker(initialDate = Instant.now())
     val (dueTime, showDueTimePicker) = timePicker(initialTime = LocalTime.of(0, 0))
+    val (done, taskCreate) = taskCreate()
+    LaunchedEffect(done) {
+        if (done) {
+            Toast.makeText(context, "done", Toast.LENGTH_SHORT).show()
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,8 +124,12 @@ fun TaskCreatePage(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
-                enabled = title.isNotBlank(),
+                onClick = {
+                    if (title.isNotBlank() && dueDate != null && dueTime != null) {
+                        taskCreate(title, content, dueDate, dueTime)
+                    }
+                },
+                enabled = title.isNotBlank() && dueDate != null && dueTime != null,
             ) {
                 Text(
                     text = "目標を設定する",
