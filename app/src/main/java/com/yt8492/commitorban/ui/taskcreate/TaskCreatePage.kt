@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.yt8492.commitorban.ui.theme.CommitOrBanTheme
@@ -32,6 +33,9 @@ fun TaskCreatePage(
     val (dueDate, showDueDatePicker) = datePicker(initialDate = Instant.now())
     val (dueTime, showDueTimePicker) = timePicker(initialTime = LocalTime.of(0, 0))
     val (done, taskCreate) = taskCreate()
+    val (dialogVisible, setDialogVisible) = remember {
+        mutableStateOf(false)
+    }
     LaunchedEffect(done) {
         if (done) {
             navController.popBackStack()
@@ -59,6 +63,38 @@ fun TaskCreatePage(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
+            if (dialogVisible) {
+                AlertDialog(
+                    text = {
+                        Text(
+                            text = "爆弾写真を撮影してください",
+                            style = CommitOrBanTheme.typography.h6,
+                            color = Color.White,
+                        )
+                    },
+                    buttons = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    if (title.isNotBlank() && dueDate != null && dueTime != null) {
+                                        taskCreate(title, content, dueDate, dueTime)
+                                        setDialogVisible(false)
+                                    }
+                                },
+                                enabled = title.isNotBlank() && dueDate != null && dueTime != null
+                            ) {
+                                Text(text = "OK")
+                            }
+                        }
+                    },
+                    onDismissRequest = {
+                        setDialogVisible(false)
+                    }
+                )
+            }
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -123,7 +159,7 @@ fun TaskCreatePage(
                     .fillMaxWidth(),
                 onClick = {
                     if (title.isNotBlank() && dueDate != null && dueTime != null) {
-                        taskCreate(title, content, dueDate, dueTime)
+                        setDialogVisible(true)
                     }
                 },
                 enabled = title.isNotBlank() && dueDate != null && dueTime != null,
