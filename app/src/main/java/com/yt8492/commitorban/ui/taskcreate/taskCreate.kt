@@ -1,6 +1,8 @@
 package com.yt8492.commitorban.ui.taskcreate
 
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,7 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.TaskStackBuilder
 import androidx.core.content.FileProvider
+import androidx.core.content.getSystemService
+import androidx.core.net.toUri
+import com.yt8492.commitorban.MainActivity
 import com.yt8492.commitorban.domain.model.Task
 import com.yt8492.commitorban.infra.LocalTaskRepository
 import com.yt8492.commitorban.infra.PunishmentImage
@@ -25,6 +31,9 @@ import java.util.UUID
 fun taskCreate(): TaskCreateResult {
     val context = LocalContext.current
     val repository = LocalTaskRepository.current
+    val alarmManager = remember {
+        context.getSystemService<AlarmManager>()
+    }
     val coroutineScope = rememberCoroutineScope()
     val (done, setDone) = remember {
         mutableStateOf(false)
@@ -40,6 +49,21 @@ fun taskCreate(): TaskCreateResult {
             if (data != null && pendingTask != null) {
                 coroutineScope.launch {
                     repository.save(pendingTask)
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        "commitorban://commitorban.yt8492.com/checkDone?id=${pendingTask.id}".toUri(),
+                        context,
+                        MainActivity::class.java
+                    )
+                    val pendingIntent = TaskStackBuilder.create(context).run {
+                        addNextIntentWithParentStack(intent)
+                        getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE)
+                    }
+                    alarmManager?.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        pendingTask.due.toEpochMilli(),
+                        pendingIntent,
+                    )
                     setDone(true)
                 }
             }

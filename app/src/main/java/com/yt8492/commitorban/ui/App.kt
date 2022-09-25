@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.yt8492.commitorban.ui.checkdone.CheckDonePage
 import com.yt8492.commitorban.ui.login.HandleTwitterLogin
 import com.yt8492.commitorban.ui.login.TwitterLoginPage
 import com.yt8492.commitorban.ui.taskcreate.TaskCreatePage
@@ -29,6 +30,13 @@ fun App() {
                     uriPattern = "commitorban://commitorban.yt8492.com/callback?oauth_verifier={oauthVerifier}"
                 },
             ),
+            arguments = listOf(
+                navArgument(
+                    name = "oauthVerifier",
+                ) {
+                    type = NavType.StringType
+                }
+            )
         ) { backStackEntry ->
             val oauthVerifier = requireNotNull(backStackEntry.arguments?.getString("oauthVerifier"))
             HandleTwitterLogin(
@@ -63,6 +71,27 @@ fun App() {
             route = "taskCreate"
         ) {
             TaskCreatePage(
+                navController = navController,
+            )
+        }
+        composable(
+            route = "checkDone",
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "commitorban://commitorban.yt8492.com/checkDone?id={id}"
+                },
+            ),
+            arguments = listOf(
+                navArgument(
+                    name = "id"
+                ) {
+                    type = NavType.StringType
+                },
+            ),
+        ) { backStackEntry ->
+            val id = requireNotNull(backStackEntry.arguments?.getString("id"))
+            CheckDonePage(
+                id = id,
                 navController = navController,
             )
         }
