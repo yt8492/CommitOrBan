@@ -22,6 +22,12 @@ object Twitter {
         }
     }
 
+    suspend fun storeToken(token: AccessToken) {
+        withContext(Dispatchers.IO) {
+            instance.oAuthAccessToken = token
+        }
+    }
+
     suspend fun tweet(text: String, media: InputStream? = null) {
         withContext(Dispatchers.IO) {
             val status = StatusUpdate(text).apply {

@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import com.yt8492.commitorban.infra.AccessTokenPreferences
+import com.yt8492.commitorban.infra.LocalAccessTokenPreferences
 import com.yt8492.commitorban.infra.LocalTaskRepository
 import com.yt8492.commitorban.infra.TaskRepository
 import com.yt8492.commitorban.infra.room.AppDatabase
@@ -17,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         setContent {
             CommitOrBanTheme {
                 CompositionLocalProvider(
-                    LocalTaskRepository provides TaskRepository(AppDatabase.INSTANCE.taskDao())
+                    LocalTaskRepository provides TaskRepository(AppDatabase.INSTANCE.taskDao()),
+                    LocalAccessTokenPreferences provides AccessTokenPreferences(this)
                 ) {
                     App()
                 }

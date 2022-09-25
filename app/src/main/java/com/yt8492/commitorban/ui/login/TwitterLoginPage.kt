@@ -8,15 +8,28 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import com.yt8492.commitorban.infra.LocalAccessTokenPreferences
+import com.yt8492.commitorban.infra.Twitter
 import kotlinx.coroutines.launch
 
 @Composable
-fun TwitterLoginPage() {
+fun TwitterLoginPage(
+    navController: NavController,
+) {
     val coroutineScope = rememberCoroutineScope()
     val login = twitterLogin()
+    val token = LocalAccessTokenPreferences.current.watch()
+    LaunchedEffect(token) {
+        if (token != null) {
+            Twitter.storeToken(token)
+            navController.navigate("taskList")
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(

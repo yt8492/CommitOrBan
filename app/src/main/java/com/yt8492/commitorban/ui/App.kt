@@ -21,7 +21,7 @@ fun App() {
         composable(
             route = "twitterLogin",
         ) {
-            TwitterLoginPage()
+            TwitterLoginPage(navController)
         }
         composable(
             route = "handleTwitterLogin?oauthVerifier={oauthVerifier}",
