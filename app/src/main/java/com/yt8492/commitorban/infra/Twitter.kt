@@ -22,7 +22,7 @@ object Twitter {
         }
     }
 
-    suspend fun tweet(text: String, media: InputStream?) {
+    suspend fun tweet(text: String, media: InputStream? = null) {
         withContext(Dispatchers.IO) {
             val status = StatusUpdate(text).apply {
                 if (media != null) {

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.yt8492.commitorban.domain.model.Task
 import com.yt8492.commitorban.infra.LocalTaskRepository
+import com.yt8492.commitorban.infra.Twitter
 
 @Composable
 fun doneTask(): DoneTaskResult {
@@ -16,6 +17,12 @@ fun doneTask(): DoneTaskResult {
         finished = finished,
         done = {
             repository.save(it.copy(done = true))
+            val text = """
+                目標「${it.title}」を達成しました！
+                #ishinomakihack
+                #石巻ハッカソン
+            """.trimIndent()
+            Twitter.tweet(text)
             setFinished(true)
         }
     )
