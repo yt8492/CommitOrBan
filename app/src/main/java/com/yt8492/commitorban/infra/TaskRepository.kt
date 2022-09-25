@@ -32,6 +32,10 @@ class TaskRepository(private val taskDao: TaskDao) {
         taskDao.save(convertToEntity(task))
     }
 
+    suspend fun delete(task: Task) {
+        taskDao.delete(convertToEntity(task))
+    }
+
     private fun convertToEntity(task: Task): TaskEntity {
         val punishment = task.punishment as PunishmentImage
         return TaskEntity(

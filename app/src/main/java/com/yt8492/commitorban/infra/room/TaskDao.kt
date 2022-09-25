@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
-    @Query("select * from tasks where done = 0")
+    @Query("select * from tasks")
     fun getAll(): Flow<List<TaskEntity>>
 
     @Query("select * from tasks where id = :id")

@@ -1,13 +1,12 @@
 package com.yt8492.commitorban.ui.taskdetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -25,8 +24,15 @@ fun TaskDetailPage(
     val coroutineScope = rememberCoroutineScope()
     val task = getTask(id = taskId) ?: return
     val (doneFinished, done) = doneTask()
+    val (deleteFinished, delete) = deleteTask()
     val (now, setNow) = remember {
         mutableStateOf(Instant.now())
+    }
+    LaunchedEffect(deleteFinished) {
+        if (deleteFinished) {
+            navController.navigate("taskList")
+            Log.d("hogehoge", "deleted")
+        }
     }
     TimeTickSecEventReceiver {
         setNow(Instant.now())
@@ -39,13 +45,31 @@ fun TaskDetailPage(
                     Text(text = task.title)
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        },
+                    ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "戻る",
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                delete(task)
+                            }
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "削除する",
+                        )
+                    }
+                }
             )
         }
     ) { paddingValues ->
