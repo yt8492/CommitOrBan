@@ -1,0 +1,8 @@
+env {
+    signing {
+        storeFile = '/path/to/key_store_file'
+        storePassword = 'input store password'
+        keyAlias = 'input alias'
+        keyPassword = 'input alias password'
+    }
+}

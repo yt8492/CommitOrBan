@@ -4,6 +4,11 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def configFileName = (project.hasProperty('config')
+        ? project.property('config') : 'config.gradle')
+
+def config = new ConfigSlurper().parse(new File(configFileName).text)
+
 android {
     namespace 'com.yt8492.commitorban'
     compileSdk 33
@@ -21,9 +26,40 @@ android {
         }
     }
 
+    signingConfigs {
+        debug {
+            def sf = file("${config.env.signing.storeFile}")
+            if (sf.exists()) {
+                storeFile = sf
+                storePassword config.env.signing.storePassword
+                keyAlias config.env.signing.keyAlias
+                keyPassword config.env.signing.keyPassword
+            } else {
+                storeFile = file("$project.rootDir/debug.jks")
+                storePassword "keypass"
+                keyAlias "key_alias"
+                keyPassword "keyalias"
+            }
+        }
+        release {
+            def sf = file("${config.env.signing.storeFile}")
+            if (sf.exists()) {
+                storeFile = sf
+                storePassword config.env.signing.storePassword
+                keyAlias config.env.signing.keyAlias
+                keyPassword config.env.signing.keyPassword
+            } else {
+                storeFile = file("$project.rootDir/debug.jks")
+                storePassword "keypass"
+                keyAlias "key_alias"
+                keyPassword "keyalias"
+            }
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
